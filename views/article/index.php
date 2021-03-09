@@ -8,15 +8,6 @@ use yii\helpers\Html;
 //print "This is fantastic!";
 $this->title = "Article!";
 
-foreach ($articles as $article) {
-
-    if (empty($article->authors)){
-    echo '</br>';
-    }else var_dump($article->authors);
-}
-    echo "</br>";
-die();
-
 if (!empty($articles)):
     foreach($articles as $article) : ?>
     <ul id="headlines">
@@ -32,8 +23,15 @@ if (!empty($articles)):
                     </br>
                     subcategory
                     <?= Html::a($article->subcategories['name'], ['article/index']) ?>
+                    </br>
                         author(s)
-                    <?= Html::a($article->authors['id'], '/') ?>
+                    <?php
+                        if (!empty($article->authors)) {
+                            foreach ($article->authors as $author) {
+                                echo Html::a($author['login'], '/'), " ";
+                            }
+                        }else echo "This article has not author!";
+                    ?>
                 </span>
             </h2>
             <p class="summary"><?php echo mb_strimwidth($article['summary'], 0, 50) . '...'?></p>

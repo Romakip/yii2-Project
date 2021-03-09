@@ -13,4 +13,12 @@ class Author extends ActiveRecord
         return 'authors';
     }
 
+    public function rules(){
+
+        return [
+
+            [['author', 'article_id'], 'safe'],
+        ];
+    }
+
 }

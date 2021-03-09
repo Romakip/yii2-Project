@@ -10,12 +10,14 @@ namespace app\controllers;
 use yii\web\Controller;
 use app\models\Article;
 use app\models\Category;
+use app\models\Author;
+use app\models\OurUser;
 use app\models\Subcategory;
 use Yii;
 
 class ArticleController extends Controller
 {
-    
+
    public function actionIndex(){
        
        $this->layout = 'article';
@@ -39,17 +41,17 @@ class ArticleController extends Controller
        $article = new Article();
        $categories = Category::find()->all();
        $subcategories = Subcategory::find()->all();
-       if ($article->load(Yii::$app->request->post())){
-           if($article->validate() ){
+       $users = OurUser::find()->all();
+       if ($article->load(Yii::$app->request->post())) {
+           if ($article->validate()) {
                Yii::$app->session->setFlash('success', 'Success');
                $article->save();
                return $this->refresh();
-           }else {
+           } else {
                Yii::$app->session->setFlash('error', 'Error');
            }
-
        }
-       return $this->render('add', ['article' => $article, 'categories' => $categories, 'subcategories' => $subcategories]);
+       return $this->render('add', ['article' => $article, 'categories' => $categories, 'subcategories' => $subcategories, 'users' => $users]);
    }
 
    public function actionEdit(){
@@ -58,6 +60,7 @@ class ArticleController extends Controller
        $article = Article::findone($id);
        $categories = Category::find()->all();
        $subcategories = Subcategory::find()->all();
+       $authors = Author::find()->all();
 
        if ($article->load(Yii::$app->request->post())){
            if($article->validate() ){
@@ -68,7 +71,7 @@ class ArticleController extends Controller
                Yii::$app->session->setFlash('error', 'Error');
            }
        }
-       return $this->render('edit', ['article' => $article, 'categories' => $categories, 'subcategories' => $subcategories]);
+       return $this->render('edit', ['article' => $article, 'categories' => $categories, 'subcategories' => $subcategories, 'authors' => $authors]);
    }
 
    public function actionDelete(){

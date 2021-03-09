@@ -4,7 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use app\models\Article;
 use yii\helpers\ArrayHelper;
-use Yii;
+//use Yii;
 /* 
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -27,6 +27,8 @@ use Yii;
 <?= $form->field($article, 'categoryId')->dropDownList($categories)->label('Category') ?>
 <?php $subcategories = ArrayHelper::map($subcategories, 'id', 'name')?>
 <?= $form->field($article, 'subcategoryId')->dropDownList($subcategories)?>
+<?php $users = ArrayHelper::map($users, 'id', 'login')?>
+<?= $form->field($article, 'authors[]')->dropDownList($users, ['multiple' => true]) ?>
 <?= $form->field($article, 'publicationDate')->input('date') ?>
 <?= $form->field($article, 'active')->checkbox([1, 0]) ?>
 <?= Html::submitButton('Create', ['class' => 'btn btn-success'])?>
