@@ -19,8 +19,8 @@ use app\models\Category;
 <?= $form->field($article, 'categoryId')->dropDownList($categories)->label('Category') ?>
 <?php $subcategories = ArrayHelper::map($subcategories, 'id', 'name')?>
 <?= $form->field($article, 'subcategoryId')->dropDownList($subcategories)?>
-<?php $authors = ArrayHelper::map($authors, 'id' , 'login')?>
-<?= $form->field($article, 'id[]')->dropDownList($authors) ?>
+<?php $users = ArrayHelper::map($users, 'id' , 'login')?>
+<?= $form->field($article, 'authors[]')->dropDownList($users, ['multiple' => true]) ?>
 <?= $form->field($article, 'publicationDate')->input('date') ?>
 <?= $form->field($article, 'active')->checkbox([1, 0]) ?>
 <?= Html::submitButton('Create', ['class' => 'btn btn-success'])?>

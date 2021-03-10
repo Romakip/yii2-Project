@@ -44,8 +44,18 @@ class ArticleController extends Controller
        $users = OurUser::find()->all();
        if ($article->load(Yii::$app->request->post())) {
            if ($article->validate()) {
-               Yii::$app->session->setFlash('success', 'Success');
                $article->save();
+               Yii::$app->session->setFlash('success', 'Success');
+               $id = Yii::$app->db->getLastInsertID();
+               $article = Yii::$app->request->post('Article');
+               if (!empty($article['authors'])) {
+                   foreach ($article['authors'] as $item) {
+                       $author = new Author;
+                       $author->article_id = $id;
+                       $author->author = $item;
+                       $author->save();
+                   }
+               }
                return $this->refresh();
            } else {
                Yii::$app->session->setFlash('error', 'Error');
@@ -54,29 +64,37 @@ class ArticleController extends Controller
        return $this->render('add', ['article' => $article, 'categories' => $categories, 'subcategories' => $subcategories, 'users' => $users]);
    }
 
-   public function actionEdit(){
+   public function actionEdit($id){
 
-       $id = isset($_GET['id']) ? $_GET['id'] : null;
        $article = Article::findone($id);
        $categories = Category::find()->all();
        $subcategories = Subcategory::find()->all();
-       $authors = Author::find()->all();
+       $users = OurUser::find()->all();
 
        if ($article->load(Yii::$app->request->post())){
            if($article->validate() ){
-               Yii::$app->session->setFlash('success', 'Success');
                $article->save();
+               Yii::$app->session->setFlash('success', 'Success');
+               $article = Yii::$app->request->post('Article');
+               Author::deleteAll(['article_id' => $id]);
+               if (!empty($article['authors'])){
+                foreach ($article['authors'] as $item){
+                   $author = new Author;
+                   $author->article_id = $id;
+                   $author->author = $item;
+                   $author->save();
+               }
+                }
                return $this->goBack(['article/index']);
            }else {
                Yii::$app->session->setFlash('error', 'Error');
            }
        }
-       return $this->render('edit', ['article' => $article, 'categories' => $categories, 'subcategories' => $subcategories, 'authors' => $authors]);
+       return $this->render('edit', ['article' => $article, 'categories' => $categories, 'subcategories' => $subcategories, 'users' => $users]);
    }
 
-   public function actionDelete(){
+   public function actionDelete($id){
 
-       $id = isset($_GET['id']) ? $_GET['id'] : null;
        $article = Article::findOne($id);
        $article->delete($id);
        $articles = Article::find()->with()->all();

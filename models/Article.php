@@ -8,17 +8,15 @@ use yii\db\ActiveRecord;
 use app\models\Category;
 use app\models\Subcategory;
 use app\models\OurUser;
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 class Article extends ActiveRecord
 {
 
+    public $relations = [];
 
-    
+    private $_values = [];
+
     public static function tableName() {
         
         return 'articles';
@@ -40,15 +38,18 @@ class Article extends ActiveRecord
             ->viaTable('authors', ['article_id' => 'id']);
     }
 
+
     public function rules(){
 
         return [
 
-            [['title', 'summary', 'content', 'publicationDate', 'categoryId', 'subcategoryId', 'authors' ], 'required'],
+            [['title', 'summary', 'content', 'publicationDate', 'categoryId', 'subcategoryId'], 'required'],
             ['title', 'string', 'max' => 5, 'tooLong' => 'Title not should be long'],
             ['active', 'safe']
         ];
 
     }
+    
+
 }
 
